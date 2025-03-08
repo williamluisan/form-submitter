@@ -1,10 +1,11 @@
 import sys
 import os
 
-from modules.main import Main
+from modules.submitter.submitter import Submitter
 
 def main():
-    print(Main.submit())
+    submitter = Submitter()
+    print(submitter.read_simple_captcha())
 
 if __name__ == "__main__":
     main()
