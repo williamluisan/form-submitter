@@ -11,12 +11,12 @@ class ImageFile():
     def open(self):
         return Image.open(self.img_path)
 
-    def get_file_name(self):
-        return os.path.basename(self.img_path)
-
-    def get_downloaded_image():
+    def get_downloaded_image(self):
         img_path = f'{DOWNLOAD_PATH}/simple_captcha_sample.jpg'
         return img_path
+
+    def get_file_name(self):
+        return os.path.basename(self.img_path)
 
     def show_with_explorer(self):
         # UNC path to access file to WSL
