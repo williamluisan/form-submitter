@@ -1,5 +1,5 @@
 import os
-from PIL import Image
+from PIL import Image, ImageFilter, ImageOps
 import pytesseract
 
 from modules.captcha.captcha import Captcha
@@ -15,16 +15,23 @@ class SimpleCaptcha(Captcha):
         captcha_img_filename = ImageFile(captcha_img_file).get_file_name()
 
         """
-        Process to grayscale and save
+        Process to grayscale
         """
         image_raw = ImageFile(captcha_img_file)
         image_gray = ImageProcessor(image_raw.open()).to_grayscale()
+        
+        threshold = 180
+        binary_image = image_gray.point(lambda x: 0 if x < threshold else 255, '1')
+        binary_image = binary_image.filter(ImageFilter.MedianFilter(size=1))
+        processed_text = pytesseract.image_to_string(binary_image, config='--psm 7 -c tessedit_char_whitelist=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        print(processed_text)
 
         ## dummy (open image)
-        # image_processor = ImageProcessor(image_gray)
-        # image_gray_saved = image_processor.save(captcha_img_filename)
+        image_processor = ImageProcessor(binary_image)
+        image_gray_saved = image_processor.save('gray_' + captcha_img_filename)
         # image_file = ImageFile(image_gray_saved)
         # image_file.show_with_explorer()
+
         return
 
         ## use spearated image processing class
@@ -51,4 +58,5 @@ class SimpleCaptcha(Captcha):
         # processed_text = pytesseract.image_to_string(binary_image, config='--psm 7 -c tessedit_char_whitelist=0123456789')
         # print(processed_text)
 
+        # binary_image = ImageOps.invert(binary_image.convert('L'))
         # return "read simple captcha"
