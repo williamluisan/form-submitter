@@ -20,10 +20,14 @@ class SimpleCaptcha(Captcha):
         image_raw = ImageFile(captcha_img_file)
         image_gray = ImageProcessor(image_raw.open()).to_grayscale()
         
-        threshold = 180
+        threshold = 178
         binary_image = image_gray.point(lambda x: 0 if x < threshold else 255, '1')
         binary_image = binary_image.filter(ImageFilter.MedianFilter(size=1))
         processed_text = pytesseract.image_to_string(binary_image, config='--psm 7 -c tessedit_char_whitelist=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        
+        # re-process
+        # binary_image = image_gray.point(lambda x: 0 if x < threshold else 255, '1')
+
         print(processed_text)
 
         ## dummy (open image)

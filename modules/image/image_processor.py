@@ -1,8 +1,8 @@
 from PIL import Image
 
-SAVE_PATH = './tmp'
+from modules.image.image_proc import ImageProc
 
-class ImageProcessor():
+class ImageProcessor(ImageProc):
     def __init__(self, image: Image):
         self.image = image
 
@@ -11,7 +11,7 @@ class ImageProcessor():
     
     def save(self, filename: str = None):
         image = self.image
-        path = f'{SAVE_PATH}/{filename}'
+        path = f'{ImageProc.SAVE_PATH}/{filename}'
     
         ## TODO:
         # try .. catch ..
