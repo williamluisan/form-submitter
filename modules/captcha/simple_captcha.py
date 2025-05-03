@@ -5,6 +5,7 @@ import pytesseract
 from modules.captcha.captcha import Captcha
 from modules.image.image_file import ImageFile
 from modules.image.image_processor import ImageProcessor
+from modules.image.image_processor_pytesseract import ImageProcessorPytesseract
 from modules.image.image_processor_eocr import ImageProcessorEOCR
 
 class SimpleCaptcha(Captcha):
@@ -32,9 +33,9 @@ class SimpleCaptcha(Captcha):
         """
         Read using PyTesseract
         """
-        processed_text = pytesseract.image_to_string(binary_image, config='--psm 7 -c tessedit_char_whitelist=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        pyTesseractResult = ImageProcessorPytesseract(binary_image).read()
         print(f"PyTesseract:")
-        print(processed_text)
+        print(pyTesseractResult)
 
         """
         Read using EasyOCR
