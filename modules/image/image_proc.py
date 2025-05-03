@@ -4,6 +4,10 @@ class ImageProc(ABC):
     SAVE_PATH = './tmp'
 
     @abstractmethod
+    def save(self):
+        pass
+
+    @abstractmethod
     def read(self):
         pass
 
@@ -12,5 +16,5 @@ class ImageProc(ABC):
         pass
 
     @abstractmethod
-    def save(self):
+    def more_bolder(self):
         pass
