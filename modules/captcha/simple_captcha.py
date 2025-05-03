@@ -1,6 +1,7 @@
 import os
 from PIL import Image, ImageFilter, ImageOps
 import pytesseract
+import sys
 
 import numpy as np
 from scipy.ndimage import binary_dilation
@@ -34,17 +35,28 @@ class SimpleCaptcha(Captcha):
         image_gray_saved = image_processor.save('gray_' + captcha_img_filename)
 
         """
-        Read using PyTesseract
+        With PyTesseract
         """
-        pyTesseractResult = ImageProcessorPytesseract(binary_image).read()
-        print(f"PyTesseract:")
-        print(pyTesseractResult)
+        # image_to_read = filtered_image
+        # pyTesseractResult = self.__read_with_pytesseract(image_to_read)
 
         """
-        Read using EasyOCR
+        With EasyOCR
         """
-        easyOCRResult = ImageProcessorEOCR().read(image_gray_saved)
+        image_to_read = image_gray_saved
         print(f"EasyOCR:")
-        for (bbox, text, prob) in easyOCRResult:
-            (top_left, top_right, bottom_right, bottom_left) = bbox
-            print(f'Text: {text}, Probability: {prob}')
+        easyOCRResult = self.__read_with_easyocr(image_to_read)
+
+        # post string processing after captcha reading
+        result = easyOCRResult
+        for i in range(len(result)):
+            result[i] = result[i].strip().replace(" ", "")
+
+        return result
+        
+    
+    def __read_with_pytesseract(self, image: Image):
+        return ImageProcessorPytesseract(image).read()
+    
+    def __read_with_easyocr(self, image_path: str):
+        return ImageProcessorEOCR().read(image_path)

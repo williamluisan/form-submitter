@@ -8,7 +8,7 @@ load_dotenv(dotenv_path='config/.env')
 
 def main():
     submitter = Submitter()
-    submitter.read_simple_captcha()
+    print(submitter.read_simple_captcha())
 
 if __name__ == "__main__":
     main()
