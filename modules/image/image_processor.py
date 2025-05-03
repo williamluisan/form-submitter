@@ -6,6 +6,9 @@ class ImageProcessor(ImageProc):
     def __init__(self, image: Image):
         self.image = image
 
+    def read(self):
+        return
+
     def to_grayscale(self):
         return self.image.convert('L')
     
