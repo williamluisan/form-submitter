@@ -12,8 +12,11 @@ class ImageProcessorEOCR(ImageProc):
     def read(self, image_path):
         return self.reader.readtext(image_path)
 
-    def to_grayscale():
+    def save():
         return
 
-    def save():
+    def to_grayscale():
+        return
+    
+    def more_bolder():
         return

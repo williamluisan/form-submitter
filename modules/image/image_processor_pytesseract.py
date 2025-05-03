@@ -13,8 +13,11 @@ class ImageProcessorPytesseract(ImageProc):
     def read(self):
         return pytesseract.image_to_string(self.image, config = self.config)
 
-    def to_grayscale():
+    def save():
         return
 
-    def save():
+    def to_grayscale():
+        return
+    
+    def more_bolder():
         return

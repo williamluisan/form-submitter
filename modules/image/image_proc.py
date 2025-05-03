@@ -14,3 +14,7 @@ class ImageProc(ABC):
     @abstractmethod
     def to_grayscale(self):
         pass
+
+    @abstractmethod
+    def more_bolder(self):
+        pass
