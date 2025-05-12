@@ -12,7 +12,7 @@ class ImageFile():
         return Image.open(self.img_path)
 
     def get_downloaded_image(self):
-        img_path = f'{DOWNLOAD_PATH}/simple_captcha_sample3.jpg'
+        img_path = f'{DOWNLOAD_PATH}/2.jpg'
         return img_path
 
     def get_file_name(self):
