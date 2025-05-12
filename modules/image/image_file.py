@@ -16,9 +16,10 @@ class ImageFile():
     """
     with Requests library
     """
-    def download(self, name_id: str = None):
+    def download(self, name_id: str = None) -> dict:
         error_msg_perfix = 'Image download: '
         error_msg = ''
+        image_path = ''
 
         timestamp = int(datetime.now().timestamp())
         
@@ -28,17 +29,27 @@ class ImageFile():
 
         img_binary = requests.get(self.img_path).content
         try:
-            with open(f'{DOWNLOAD_PATH}/{filename}.jpg', 'wb') as f:
+            image_path = f'{DOWNLOAD_PATH}/{filename}.jpg'
+            with open(image_path, 'wb') as f:
                 f.write(img_binary)
+
+            return {
+                'status': True, 
+                'message': 'Image downloaded successfully', 
+                'path': image_path
+            }
         except Exception as e:
             error_msg = f'{error_msg_perfix}{e}'
         
         if error_msg != '':
-            return error_msg
-        return True
+            return {
+                'status': False,
+                'message': error_msg,
+                'path': None
+            }
 
     def get_downloaded_image(self):
-        img_path = f'{DOWNLOAD_PATH}/2.jpg'
+        img_path = self.img_path
         return img_path
 
     def get_file_name(self):

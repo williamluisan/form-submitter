@@ -13,11 +13,14 @@ from modules.image.image_processor_pytesseract import ImageProcessorPytesseract
 from modules.image.image_processor_eocr import ImageProcessorEOCR
 
 class SimpleCaptcha(Captcha):
-    def read(self):
+    def __init__(self, captcha_img_path: str):
+        self.captcha_img_path = captcha_img_path
+
+    def read(self) -> list:
         """
         Open downloaded catpcha image
         """
-        captcha_img_file = ImageFile('').get_downloaded_image()
+        captcha_img_file = ImageFile(self.captcha_img_path).get_downloaded_image()
         captcha_img_filename = ImageFile(captcha_img_file).get_file_name()
     
         """

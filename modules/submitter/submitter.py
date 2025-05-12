@@ -11,14 +11,23 @@ class Submitter:
         bs4 = BeautifulSoup(res.text, 'html.parser')
         counter = 1
 
+        """
+        Captcha handling
+        """
         # download captcha image
+        captcha_img_path = ''
         captcha_img_elem = bs4.find(id="image_captcha").find('img')
         if captcha_img_elem:
             captcha_img_url = captcha_img_elem['src']
-            captcha_image = ImageFile(captcha_img_url).download()
-            if captcha_image is not True:
-                print(captcha_image)
+            captcha_image = ImageFile(captcha_img_url).download(counter)
+            if captcha_image['status'] is False:
+                print(captcha_image['message'])
                 return
+            else:
+                captcha_img_path = captcha_image['path']
+            
+        # process captcha image to text
+        simple_captcha_text = SimpleCaptcha(captcha_img_path).read()
 
         return "Test submit"
 
