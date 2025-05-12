@@ -1,6 +1,8 @@
 import os
-from PIL import Image
+import requests
 import subprocess
+from PIL import Image
+from datetime import datetime
 
 DOWNLOAD_PATH = './public/images' 
 
@@ -10,6 +12,30 @@ class ImageFile():
     
     def open(self):
         return Image.open(self.img_path)
+
+    """
+    with Requests library
+    """
+    def download(self, name_id: str = None):
+        error_msg_perfix = 'Image download: '
+        error_msg = ''
+
+        timestamp = int(datetime.now().timestamp())
+        
+        filename = timestamp
+        if name_id is not None:
+            filename = f'{timestamp}_{name_id}'
+
+        img_binary = requests.get(self.img_path).content
+        try:
+            with open(f'{DOWNLOAD_PATH}/{filename}.jpg', 'wb') as f:
+                f.write(img_binary)
+        except Exception as e:
+            error_msg = f'{error_msg_perfix}{e}'
+        
+        if error_msg != '':
+            return error_msg
+        return True
 
     def get_downloaded_image(self):
         img_path = f'{DOWNLOAD_PATH}/2.jpg'
