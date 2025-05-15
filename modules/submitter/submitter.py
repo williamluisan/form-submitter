@@ -1,3 +1,4 @@
+import time
 import pprint
 import requests
 from bs4 import BeautifulSoup
@@ -56,13 +57,16 @@ class Submitter:
         for v_sct in simple_captcha_text:
             # update captcha payload
             payload['verification_code'] = v_sct
-            pprint.pprint(f'{payload}\n')
+            
+            time.sleep(3) # every 3 seconds
+            attempt_counter += 1
+            res = requests.post(post_url, data=payload)
+            if (res.text == "verification_mismatch"):
+                print(f'Attempt {attempt_counter}: {res.text} - captcha: {payload['verification_code']}\n')
+            else:
+                print(f'Attempt {attempt_counter}: {res.text}\n')
 
-            # attempt_counter += 1
-            # res = requests.post(post_url, data=payload)
-            # if (res.text == "verification_mismatch"):
-                # print(f'Attempt {attempt_counter}: {res.text}\n')
-
+        print("Finished!")
         return
 
     def read_simple_captcha(self):
