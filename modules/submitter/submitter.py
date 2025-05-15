@@ -6,10 +6,29 @@ from modules.image.image_file import ImageFile
 
 class Submitter:
     def submit(self):
-        target_url = "https://courses.hmi-ihs.com/uat/courses/register/VWJyU2t5VjViNVlnL2xWQUlPWWwwdz09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09"
+        # target_url = "https://courses.hmi-ihs.com/uat/courses/register/VWJyU2t5VjViNVlnL2xWQUlPWWwwdz09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09"
+        target_url = "https://shri.dlideas.com/courses/register/M2NtdVAzREw5QVhQMzRvektsQmxKUT09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09/1"
         res = requests.get(target_url)
         bs4 = BeautifulSoup(res.text, 'html.parser')
         counter = 1
+
+        """
+        Form handling
+        """
+        form = bs4.find('form', {'id': 'self_student_register_from'})
+        post_url = form.get('action')
+        print(post_url)
+
+        payload = {
+            'student_name': 'Alo',
+        }
+        post = requests.post(post_url, data=payload)
+        print(post.text)
+        return
+
+        inputs = form.find_all('input', {'type': 'text'})
+        selections = form.find_all('select')
+        radio_selections = form.find_all('input', {'type': 'radio'})
 
         """
         Captcha handling
