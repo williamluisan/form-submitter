@@ -8,7 +8,7 @@ load_dotenv(dotenv_path='config/.env')
 
 def main():
     submitter = Submitter()
-    print(submitter.submit())
+    submitter.submit()
 
 if __name__ == "__main__":
     main()

@@ -1,3 +1,4 @@
+import pprint
 import requests
 from bs4 import BeautifulSoup
 
@@ -17,19 +18,16 @@ class Submitter:
         """
         form = bs4.find('form', {'id': 'self_student_register_from'})
         post_url = form.get('action')
-        print(post_url)
+        form_inputs = form.find_all('input', attrs={'name': True})
 
-        payload = {
-            'student_name': 'Alo',
-        }
-        post = requests.post(post_url, data=payload)
-        print(post.text)
-        return
-
-        inputs = form.find_all('input', {'type': 'text'})
-        selections = form.find_all('select')
-        radio_selections = form.find_all('input', {'type': 'radio'})
-
+        """
+        Generate payload
+        """
+        payload = {}
+        for v_form_inputs in form_inputs:
+            element = v_form_inputs.get('name')
+            payload[element] = 'a'
+        
         """
         Captcha handling
         """
@@ -47,8 +45,25 @@ class Submitter:
             
         # process captcha image to text
         simple_captcha_text = SimpleCaptcha(captcha_img_path).read()
+        if not simple_captcha_text:
+            print("No captcha text extracted.")
+            return
 
-        return "Test submit"
+        """
+        Submitting
+        """
+        attempt_counter = 0
+        for v_sct in simple_captcha_text:
+            # update captcha payload
+            payload['verification_code'] = v_sct
+            pprint.pprint(f'{payload}\n')
+
+            # attempt_counter += 1
+            # res = requests.post(post_url, data=payload)
+            # if (res.text == "verification_mismatch"):
+                # print(f'Attempt {attempt_counter}: {res.text}\n')
+
+        return
 
     def read_simple_captcha(self):
         simple_captcha = SimpleCaptcha()
