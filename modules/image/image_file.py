@@ -21,11 +21,12 @@ class ImageFile():
         error_msg = ''
         image_path = ''
 
-        timestamp = int(datetime.now().timestamp())
+        # timestamp = int(datetime.now().timestamp())
+        time_str = datetime.now().strftime('%Y%m%d%H%M%S')
         
-        filename = timestamp
+        filename = time_str
         if name_id is not None:
-            filename = f'{timestamp}_{name_id}'
+            filename = f'{time_str}_{name_id}'
 
         img_binary = requests.get(self.img_path).content
         try:
