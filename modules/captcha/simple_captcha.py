@@ -62,4 +62,4 @@ class SimpleCaptcha(Captcha):
         return ImageProcessorPytesseract(image).read()
     
     def __read_with_easyocr(self, image_path: str):
-        return ImageProcessorEOCR().read(image_path)
+        return ImageProcessorEOCR(with_gpu = False).read(image_path)

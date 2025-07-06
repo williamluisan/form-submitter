@@ -7,9 +7,9 @@ from modules.image.image_proc import ImageProc
 class ImageProcessorEOCR(ImageProc):
     reader = None
 
-    def __init__(self):
+    def __init__(self, with_gpu = False):
         # specify easyocr language
-        self.reader = easyocr.Reader(['en'])
+        self.reader = easyocr.Reader(['en'], gpu=with_gpu)
     
     def read(self, image_path) -> list:
         result = self.reader.readtext(image_path)
