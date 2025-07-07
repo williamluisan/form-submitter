@@ -13,10 +13,10 @@ class ImageFile():
     def open(self):
         return Image.open(self.img_path)
 
-    """
-    with Requests library
-    """
     def download(self, name_id: str = None) -> dict:
+        """
+        with Requests library
+        """
         error_msg_perfix = 'Image download: '
         error_msg = ''
         image_path = ''
