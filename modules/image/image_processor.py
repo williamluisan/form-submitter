@@ -25,10 +25,10 @@ class ImageProcessor(ImageProc):
 
         return path
 
-    """
-    To apply dilation to the image
-    """
     def more_bolder(self, thickness = 2):
+        """
+        To apply dilation to the image
+        """
         dilation_matrix_height = thickness
         dilation_matrix_width = thickness
 
