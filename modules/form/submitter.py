@@ -1,4 +1,6 @@
+from faker import Faker
 import time
+import os
 import pprint
 import requests
 from bs4 import BeautifulSoup
@@ -8,9 +10,7 @@ from modules.image.image_file import ImageFile
 
 class Submitter:
     def submit(self):
-        # target_url = "https://courses.hmi-ihs.com/uat/courses/register/VWJyU2t5VjViNVlnL2xWQUlPWWwwdz09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09"
-        target_url = "https://shri.dlideas.com/courses/register/WkZoOENqVWNJT3graHBsYUkyWGp2QT09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09/1"
-        # target_url = "http://localhost:8081/dl_shri/courses/register/cENuN0FnQ3hXM1kyaVRGWVhCVGEydz09/RUdhWDY3NTBDQmN5NWx0cjFnV1A5UT09/1"
+        target_url = os.getenv("TARGET_URL")
         
         print(f"Form submitting attempt start for url: {target_url}\n")
 
@@ -27,30 +27,13 @@ class Submitter:
         """
         form = bs4.find('form', {'id': 'self_student_register_from'})
         post_url = form.get('action')
-        form_inputs = form.find_all('input', attrs={'name': True})
+        form_inputs = form.find_all(['input', 'select'], attrs={'name': True})
 
         """
         Generate payload
         """
-        payload = {}
-        for v_form_inputs in form_inputs:
-            element = v_form_inputs.get('name')
-            
-            # TODO: do with faker
-            payload[element] = 'a'
+        payload = self.__generate_payload(form_inputs)
 
-            # TODO: read the value from the view
-            if element == 'course_schedule_id':
-                payload[element] = 195
-            
-            # TODO: read the value from the view
-            if element == 'course_type':
-                payload[element] = 'S'
-
-            # TODO: with faker
-            if element == 'email':
-                payload[element] = 'johndoe1122@dlideas.com'
-        
         """
         Captcha handling
         """
@@ -102,3 +85,37 @@ class Submitter:
     def read_simple_captcha(self):
         simple_captcha = SimpleCaptcha()
         return simple_captcha.read()
+    
+    def __generate_payload(self, form_html_str: str):
+        """
+        To generate appropriate payload to pass
+        
+        Args:
+            form_html_str (str): The raw HTML string input form
+        """
+        fake = Faker()
+
+        payload = {}
+        for v_form_inputs in form_html_str:
+            element = v_form_inputs.get('name')
+            value = v_form_inputs.get('value')
+            
+            payload[element] = 'x' # default
+
+            # important form data that is exists in element value    
+            if element in ['course_id', 'course_type', 'course_schedule_id']:
+                payload[element] = value
+
+            # specific case
+            if element == 'student_type':
+                payload[element] = 'I'
+            if element == 'id_type':
+                payload[element] = 'NRIC'
+
+            # with faker
+            if 'student_name' in element:
+                payload[element] = fake.name()
+            if 'email' in element:
+                payload[element] = fake.email()
+
+        return payload
