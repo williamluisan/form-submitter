@@ -10,15 +10,16 @@ from modules.image.image_file import ImageFile
 
 class Submitter:
     def submit(self):
-        target_url = os.getenv("TARGET_URL")
+        TARGET_URL = os.getenv("TARGET_URL")
+        SUBMIT_DELAY_TIME = int(os.getenv("SUBMIT_DELAY_TIME"))
         
-        print(f"Form submitting attempt start for url: {target_url}\n")
+        print(f"Form submitting attempt start for url: {TARGET_URL}\n")
 
         session = requests.Session()
         session.headers.update({
-            'User-Agent': 'Mozilla/5.0', # mocking user agent as mozilla
+            'User-Agent': os.getenv("USER_AGENT_MOCK"), # mocking user agent as mozilla
         })
-        res = session.get(target_url)
+        res = session.get(TARGET_URL)
         bs4 = BeautifulSoup(res.text, 'html.parser')
         counter = 1
 
@@ -63,7 +64,7 @@ class Submitter:
             # update captcha payload
             payload['verification_code'] = v_sct
             
-            time.sleep(3) # every 3 seconds
+            time.sleep(SUBMIT_DELAY_TIME) # every 3 seconds
             attempt_counter += 1
             res = session.post(post_url, data=payload)
             if (res.text == "verification_mismatch"):
@@ -77,9 +78,9 @@ class Submitter:
                 return
 
         print("No successful attempt.\n")
-        time.sleep(3)
+        time.sleep(SUBMIT_DELAY_TIME)
         print("Re-attempting submit new form...\n")
-        time.sleep(3)
+        time.sleep(SUBMIT_DELAY_TIME)
         self.submit() # re-call self function
 
     def read_simple_captcha(self):
