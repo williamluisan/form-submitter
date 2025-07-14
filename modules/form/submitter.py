@@ -76,13 +76,14 @@ class Submitter:
                 print("\n")
                 print(res.text)
                 print("Form submitted!")
-                return
+                time.sleep(SUBMIT_DELAY_TIME)
+                self.submit() # re-call self
 
         print("No successful attempt.\n")
         time.sleep(SUBMIT_DELAY_TIME)
         print("Re-attempting submit new form...\n")
         time.sleep(SUBMIT_DELAY_TIME)
-        self.submit() # re-call self function
+        self.submit() # re-call self
 
     def read_simple_captcha(self):
         simple_captcha = SimpleCaptcha()
@@ -117,8 +118,8 @@ class Submitter:
                 payload[name_attr_val] = 'NRIC'
 
             # with faker
-            if 'student_name_attr_val' in name_attr_val:
-                payload[name_attr_val] = fake.name_attr_val()
+            if 'student_name' in name_attr_val:
+                payload[name_attr_val] = fake.name()
             if 'email' in name_attr_val:
                 payload[name_attr_val] = fake.email()
             if name_attr_val == 'contact_no':
