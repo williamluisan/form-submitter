@@ -100,29 +100,41 @@ class Submitter:
 
         payload = {}
         for v_form_inputs in form_html_str:
-            element = v_form_inputs.get('name')
+            element = v_form_inputs.name
+            name_attr_val = v_form_inputs.get('name')
             value = v_form_inputs.get('value')
             
-            payload[element] = 'x' # default
+            payload[name_attr_val] = 'x' # default
 
-            # important form data that is exists in element value    
-            if element in ['course_id', 'course_type', 'course_schedule_id']:
-                payload[element] = value
+            # important form data that is exists in name_attr_val value
+            if name_attr_val in ['course_id', 'course_type', 'course_schedule_id']:
+                payload[name_attr_val] = value
 
             # specific case
-            if element == 'student_type':
-                payload[element] = 'I'
-            if element == 'id_type':
-                payload[element] = 'NRIC'
-            if element == 'contact_no':
-                payload[element] = fake.singapore_mobile_number()
-            if element == 'nric':
-                payload[element] = fake.singapore_nric()
+            if name_attr_val == 'student_type':
+                payload[name_attr_val] = 'I'
+            if name_attr_val == 'id_type':
+                payload[name_attr_val] = 'NRIC'
 
             # with faker
-            if 'student_name' in element:
-                payload[element] = fake.name()
-            if 'email' in element:
-                payload[element] = fake.email()
+            if 'student_name_attr_val' in name_attr_val:
+                payload[name_attr_val] = fake.name_attr_val()
+            if 'email' in name_attr_val:
+                payload[name_attr_val] = fake.email()
+            if name_attr_val == 'contact_no':
+                payload[name_attr_val] = fake.singapore_mobile_number()
+            if name_attr_val == 'nric':
+                payload[name_attr_val] = fake.singapore_nric()
+
+            # handle select input value
+            if element == 'select':
+                options = v_form_inputs.find_all('option')
+                if options:
+                    first_value = options[0].get('value', options[0].text.strip())
+                    selected = first_value
+                    if first_value == '':
+                        second_value = options[1].get('value', options[1].text.strip())
+                        selected = second_value
+                    payload[name_attr_val] = selected
 
         return payload
