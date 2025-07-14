@@ -6,19 +6,21 @@ import requests
 from bs4 import BeautifulSoup
 
 from modules.captcha.simple_captcha import SimpleCaptcha
+from modules.form.faker_provider import FakerProvider
 from modules.image.image_file import ImageFile
 
 class Submitter:
     def submit(self):
-        target_url = os.getenv("TARGET_URL")
+        TARGET_URL = os.getenv("TARGET_URL")
+        SUBMIT_DELAY_TIME = int(os.getenv("SUBMIT_DELAY_TIME"))
         
-        print(f"Form submitting attempt start for url: {target_url}\n")
+        print(f"Form submitting attempt start for url: {TARGET_URL}\n")
 
         session = requests.Session()
         session.headers.update({
-            'User-Agent': 'Mozilla/5.0', # mocking user agent as mozilla
+            'User-Agent': os.getenv("USER_AGENT_MOCK"), # mocking user agent as mozilla
         })
-        res = session.get(target_url)
+        res = session.get(TARGET_URL)
         bs4 = BeautifulSoup(res.text, 'html.parser')
         counter = 1
 
@@ -32,7 +34,7 @@ class Submitter:
         """
         Generate payload
         """
-        payload = self.__generate_payload(form_inputs)
+        payload = self.generate_payload(form_inputs)
 
         """
         Captcha handling
@@ -63,7 +65,7 @@ class Submitter:
             # update captcha payload
             payload['verification_code'] = v_sct
             
-            time.sleep(3) # every 3 seconds
+            time.sleep(SUBMIT_DELAY_TIME) # every 3 seconds
             attempt_counter += 1
             res = session.post(post_url, data=payload)
             if (res.text == "verification_mismatch"):
@@ -77,16 +79,16 @@ class Submitter:
                 return
 
         print("No successful attempt.\n")
-        time.sleep(3)
+        time.sleep(SUBMIT_DELAY_TIME)
         print("Re-attempting submit new form...\n")
-        time.sleep(3)
+        time.sleep(SUBMIT_DELAY_TIME)
         self.submit() # re-call self function
 
     def read_simple_captcha(self):
         simple_captcha = SimpleCaptcha()
         return simple_captcha.read()
     
-    def __generate_payload(self, form_html_str: str):
+    def generate_payload(self, form_html_str: str):
         """
         To generate appropriate payload to pass
         
@@ -94,28 +96,45 @@ class Submitter:
             form_html_str (str): The raw HTML string input form
         """
         fake = Faker()
+        fake.add_provider(FakerProvider)
 
         payload = {}
         for v_form_inputs in form_html_str:
-            element = v_form_inputs.get('name')
+            element = v_form_inputs.name
+            name_attr_val = v_form_inputs.get('name')
             value = v_form_inputs.get('value')
             
-            payload[element] = 'x' # default
+            payload[name_attr_val] = 'x' # default
 
-            # important form data that is exists in element value    
-            if element in ['course_id', 'course_type', 'course_schedule_id']:
-                payload[element] = value
+            # important form data that is exists in name_attr_val value
+            if name_attr_val in ['course_id', 'course_type', 'course_schedule_id']:
+                payload[name_attr_val] = value
 
             # specific case
-            if element == 'student_type':
-                payload[element] = 'I'
-            if element == 'id_type':
-                payload[element] = 'NRIC'
+            if name_attr_val == 'student_type':
+                payload[name_attr_val] = 'I'
+            if name_attr_val == 'id_type':
+                payload[name_attr_val] = 'NRIC'
 
             # with faker
-            if 'student_name' in element:
-                payload[element] = fake.name()
-            if 'email' in element:
-                payload[element] = fake.email()
+            if 'student_name_attr_val' in name_attr_val:
+                payload[name_attr_val] = fake.name_attr_val()
+            if 'email' in name_attr_val:
+                payload[name_attr_val] = fake.email()
+            if name_attr_val == 'contact_no':
+                payload[name_attr_val] = fake.singapore_mobile_number()
+            if name_attr_val == 'nric':
+                payload[name_attr_val] = fake.singapore_nric()
+
+            # handle select input value
+            if element == 'select':
+                options = v_form_inputs.find_all('option')
+                if options:
+                    first_value = options[0].get('value', options[0].text.strip())
+                    selected = first_value
+                    if first_value == '':
+                        second_value = options[1].get('value', options[1].text.strip())
+                        selected = second_value
+                    payload[name_attr_val] = selected
 
         return payload

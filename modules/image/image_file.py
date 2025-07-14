@@ -3,8 +3,11 @@ import requests
 import subprocess
 from PIL import Image
 from datetime import datetime
+from dotenv import load_dotenv
 
-DOWNLOAD_PATH = './public/images' 
+load_dotenv(dotenv_path='config/.env')
+
+DOWNLOAD_PATH = os.getenv("CAPTCHA_IMAGE_DOWNLOAD_PATH")
 
 class ImageFile():
     def __init__(self, img_path: str):
@@ -21,7 +24,6 @@ class ImageFile():
         error_msg = ''
         image_path = ''
 
-        # timestamp = int(datetime.now().timestamp())
         time_str = datetime.now().strftime('%Y%m%d%H%M%S')
         
         filename = time_str
