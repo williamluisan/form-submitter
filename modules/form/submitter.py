@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from modules.captcha.simple_captcha import SimpleCaptcha
+from modules.form.faker_provider import FakerProvider
 from modules.image.image_file import ImageFile
 
 class Submitter:
@@ -33,7 +34,7 @@ class Submitter:
         """
         Generate payload
         """
-        payload = self.__generate_payload(form_inputs)
+        payload = self.generate_payload(form_inputs)
 
         """
         Captcha handling
@@ -87,7 +88,7 @@ class Submitter:
         simple_captcha = SimpleCaptcha()
         return simple_captcha.read()
     
-    def __generate_payload(self, form_html_str: str):
+    def generate_payload(self, form_html_str: str):
         """
         To generate appropriate payload to pass
         
@@ -95,6 +96,7 @@ class Submitter:
             form_html_str (str): The raw HTML string input form
         """
         fake = Faker()
+        fake.add_provider(FakerProvider)
 
         payload = {}
         for v_form_inputs in form_html_str:
@@ -112,6 +114,10 @@ class Submitter:
                 payload[element] = 'I'
             if element == 'id_type':
                 payload[element] = 'NRIC'
+            if element == 'contact_no':
+                payload[element] = fake.singapore_mobile_number()
+            if element == 'nric':
+                payload[element] = fake.singapore_nric()
 
             # with faker
             if 'student_name' in element:
