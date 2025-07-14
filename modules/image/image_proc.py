@@ -1,7 +1,8 @@
+import os
 from abc import ABC, abstractmethod
 
 class ImageProc(ABC):
-    SAVE_PATH = './tmp'
+    SAVE_PATH = os.getenv("GRAYSCALE_PROCESSED_IMAGE_SAVED_PATH")
 
     @abstractmethod
     def save(self):
