@@ -6,6 +6,7 @@ import sys
 import numpy as np
 from scipy.ndimage import binary_dilation
 
+import helpers.image_file_helpers as h_ifh
 from modules.captcha.captcha import Captcha
 from modules.image.image_file import ImageFile
 from modules.image.image_processor import ImageProcessor
@@ -37,6 +38,10 @@ class SimpleCaptcha(Captcha):
         image_processor = ImageProcessor(image_to_save)
         image_gray_saved = image_processor.save('gray_' + captcha_img_filename)
 
+        # clearing file of downloaded public image and grayscale processed
+        h_ifh.clear_downloaded_captcha_image()
+        h_ifh.clear_grayscale_processed_captcha_image()
+
         """
         With PyTesseract
         """
@@ -62,4 +67,4 @@ class SimpleCaptcha(Captcha):
         return ImageProcessorPytesseract(image).read()
     
     def __read_with_easyocr(self, image_path: str):
-        return ImageProcessorEOCR().read(image_path)
+        return ImageProcessorEOCR(with_gpu = False).read(image_path)

@@ -3,8 +3,11 @@ import requests
 import subprocess
 from PIL import Image
 from datetime import datetime
+from dotenv import load_dotenv
 
-DOWNLOAD_PATH = './public/images' 
+load_dotenv(dotenv_path='config/.env')
+
+DOWNLOAD_PATH = os.getenv("CAPTCHA_IMAGE_DOWNLOAD_PATH")
 
 class ImageFile():
     def __init__(self, img_path: str):
@@ -13,19 +16,19 @@ class ImageFile():
     def open(self):
         return Image.open(self.img_path)
 
-    """
-    with Requests library
-    """
     def download(self, name_id: str = None) -> dict:
+        """
+        with Requests library
+        """
         error_msg_perfix = 'Image download: '
         error_msg = ''
         image_path = ''
 
-        timestamp = int(datetime.now().timestamp())
+        time_str = datetime.now().strftime('%Y%m%d%H%M%S')
         
-        filename = timestamp
+        filename = time_str
         if name_id is not None:
-            filename = f'{timestamp}_{name_id}'
+            filename = f'{time_str}_{name_id}'
 
         img_binary = requests.get(self.img_path).content
         try:
