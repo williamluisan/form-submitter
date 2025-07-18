@@ -107,6 +107,10 @@ class Submitter:
             
             payload[name_attr_val] = 'x' # default
 
+            # CSRF tokens
+            if name_attr_val in ['u_token']:
+                payload[name_attr_val] = value
+
             # important form data that is exists in name_attr_val value
             if name_attr_val in ['course_id', 'course_type', 'course_schedule_id']:
                 payload[name_attr_val] = value
