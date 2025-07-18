@@ -7,7 +7,7 @@ Current captcha image samples that this program is able to read [(View Samples)]
 ### Requirements
 * Python >= 3.12
 * With `pip` as the package installer.
-* Refers to [requirements.txt](https://github.com/williamluisan/form-submitter/blob/master/readme.md) for the full list of packages.
+* Refers to [requirements.txt](https://github.com/williamluisan/form-submitter/blob/master/README.md) for the full list of packages.
 
 Featured packages:
 * EasyOCR: *for Optical Character Recognition*.
