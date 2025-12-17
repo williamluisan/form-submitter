@@ -24,6 +24,26 @@ class Submitter:
         bs4 = BeautifulSoup(res.text, 'html.parser')
         counter = 1
 
+        # ## START: recaptcha - captcha farming research
+        # """
+        # Form handling
+        # """
+        # form = bs4.find('form', {'id': 'form_registration'})
+        # post_url = form.get('action')
+        # form_inputs = form.find_all(['input', 'select'], attrs={'name': True})
+
+                
+        # """
+        # Recaptcha handling
+        # """
+        # recaptcha_elem = bs4.find(class_='g-recaptcha')
+        # recaptcha_site_key = recaptcha_elem.get('data-sitekey')
+        # print(recaptcha_site_key)
+        # exit()
+        # ## END: recaptcha - captcha farming research 
+
+        ### script stop here temporary, for recaptcha captcha farming research
+
         """
         Form handling
         """
