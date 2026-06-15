@@ -3,13 +3,13 @@ import os
 from dotenv import load_dotenv
 
 from modules.form.submitter import Submitter
-from modules.form.submitter2 import Submitter2
+from modules.form.submitterPlaywright import SubmitterPlaywright
 
 load_dotenv(dotenv_path='config/.env')
 
 def main():
     # submitter = Submitter()
-    submitter = Submitter2()
+    submitter = SubmitterPlaywright()
 
     submitter.submit()
 
