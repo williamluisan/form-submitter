@@ -8,8 +8,15 @@ from modules.form.submitter_playwright import SubmitterPlaywright
 load_dotenv(dotenv_path='config/.env')
 
 def main():
-    # submitter = Submitter()
-    submitter = SubmitterPlaywright()
+    """
+    Normal submitter
+    """
+    submitter = Submitter()
+
+    """
+    Playwright submitter
+    """
+    # submitter = SubmitterPlaywright()
 
     submitter.submit()
 
