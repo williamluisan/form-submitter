@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 from modules.form.submitter import Submitter
-from modules.form.submitterPlaywright import SubmitterPlaywright
+from modules.form.submitter_playwright import SubmitterPlaywright
 
 load_dotenv(dotenv_path='config/.env')
 
