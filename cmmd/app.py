@@ -9,14 +9,14 @@ load_dotenv(dotenv_path='config/.env')
 
 def main():
     """
-    Normal submitter
+    Default submitter
     """
-    submitter = Submitter()
+    # submitter = Submitter()
 
     """
     Playwright submitter
     """
-    # submitter = SubmitterPlaywright()
+    submitter = SubmitterPlaywright()
 
     submitter.submit()
 
