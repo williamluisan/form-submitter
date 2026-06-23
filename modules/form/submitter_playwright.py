@@ -39,7 +39,7 @@ class SubmitterPlaywright:
                 page.fill('input[id="data.company_email"]', email)
                 page.fill('textarea[id="data.residential_address"]', fake.address())
                 page.fill('input[id="data.emergency_contact_name"]', fake.name())
-                page.select_option('select[id="data.emergency_contact_relationship"]', value="Son")
+                page.select_option('select[id="data.emergency_contact_relationship"]', value="Family")
                 page.fill('input[id="phone_emergency_contact_phone"]', fake.phone_number())
                 page.fill('input[id="data.tax_file_number"]', "1")
                 page.fill('input[id="data.bank_account_name"]', "1")
