@@ -32,7 +32,13 @@ class SubmitterPlaywright:
                 page.fill('input[id="data.first_name"]', first_name)
                 page.fill('input[id="data.last_name"]', fake.last_name())
                 page.fill('input[id="data.preferred_first_name"]', first_name)
-                page.fill('input[id="data.date_of_birth"]', "2000-01-01")
+                page.evaluate("""
+                    const el = document.querySelector('input[id="data.date_of_birth"]');
+                    el.removeAttribute('readonly');
+                    el.value = '2000-01-01';
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                """)
                 page.select_option('select[id="data.gender"]', value="Male")
                 page.fill('input[id="phone_personal_phone"]', fake.phone_number())
                 page.fill('input[id="data.personal_email"]', email)
